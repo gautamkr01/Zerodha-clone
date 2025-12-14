@@ -23,14 +23,14 @@ const ProtectedRoute = ({ children }) => {
 
     useEffect(() => {
         axios
-            .get('http://localhost:8080/verify', { withCredentials: true })
+            .get(process.env.BACKEND_API_URL, { withCredentials: true })
             .then(() => {
                 setAuthorized(true);
             })
             .catch(() => {
                 setAuthorized(false);
 
-                window.location.href = 'http://localhost:3001/login';
+                window.location.href = 'https://gautamzerodhafrontend.onrender.com/login';
             })
             .finally(() => {
                 setLoading(false);

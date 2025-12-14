@@ -18,7 +18,7 @@ const Menu = () => {
         try {
             // 1️⃣ Call backend to clear auth cookie
             await axios.post(
-                'http://localhost:8080/logout',
+                'https://gautamzerodhabackend.onrender.com/logout',
                 {},
                 { withCredentials: true } // 🔥 REQUIRED
             );
@@ -29,7 +29,7 @@ const Menu = () => {
             setIsProfileDropdownOpen(false);
 
             // 3️⃣ Redirect to landing login page
-            window.location.href = 'http://localhost:3001/';
+            window.location.href = 'https://gautamzerodhafrontend.onrender.com/';
         }
     };
 
