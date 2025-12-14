@@ -14,38 +14,45 @@
 
 // export default ProtectedRoute;
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ProtectedRoute = ({ children }) => {
-    const [loading, setLoading] = useState(true);
-    const [authorized, setAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
 
-    useEffect(() => {
-        axios
-            .get('https://gautamzerodhabackend.onrender.com/verify', { withCredentials: true })
-            .then(() => {
-                setAuthorized(true);
-            })
-            .catch(() => {
-                setAuthorized(false);
+  useEffect(() => {
+    axios
+      .get("https://gautamzerodhabackend.onrender.com/verify", {
+        withCredentials: true,
+      })
+      .then(() => {
+        setAuthorized(true);
+      })
+      .catch(() => {
+        setAuthorized(false);
+        // 🔴 cross-domain redirect (CORRECT)
+        window.location.replace(
+          "https://gautamzerodhafrontend.onrender.com/login"
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-                window.location.href = 'https://gautamzerodhafrontend.onrender.com/login';
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
+  if (loading) {
+    return (
+      <p style={{ textAlign: "center", marginTop: "100px" }}>
+        Checking authentication...
+      </p>
+    );
+  }
 
-    if (loading) {
-        return <p style={{ textAlign: 'center', marginTop: '100px' }}>Checking authentication...</p>;
-    }
+  // 👇 important: render NOTHING if unauthorized (redirect already triggered)
+  if (!authorized) return null;
 
-    if (!authorized) {
-        return <> {alert('Unauthorized Access, Please login first to access the dashboard.')}</>;
-    }
-
-    return children;
+  return children;
 };
 
 export default ProtectedRoute;

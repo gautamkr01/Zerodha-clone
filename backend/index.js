@@ -20,25 +20,23 @@ const app = express();
 
 app.use(
     cors({
-        origin: ['https://gautamzerodhafrontend.onrender.com', 'https://gautamzerodhadashboard.onrender.com'], 
+        origin: ['https://gautamzerodhafrontend.onrender.com', 'https://gautamzerodhadashboard.onrender.com'],
         credentials: true
     })
 );
 
 app.use(cookieParser());
-app.use(express.json()); 
+app.use(express.json());
 
 app.use('/', authRoute);
-
 
 mongoose
     .connect(url)
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => {
         console.error('MongoDB connection error:', err);
-        process.exit(1); 
+        process.exit(1);
     });
-
 
 app.get('/allHoldings', userVerification, async (req, res) => {
     try {
@@ -121,6 +119,32 @@ app.post('/logout', (req, res) => {
         success: true,
         message: 'Logged out successfully'
     });
+});
+app.get('/auth/me', (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ authenticated: false });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.json({ authenticated: true, user: decoded });
+    } catch (err) {
+        res.status(401).json({ authenticated: false });
+    }
+});
+
+app.get('/verify', (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.sendStatus(401);
+
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        res.sendStatus(200);
+    } catch {
+        res.sendStatus(401);
+    }
 });
 
 app.use((err, req, res, next) => {
