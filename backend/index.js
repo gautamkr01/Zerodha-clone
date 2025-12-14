@@ -26,7 +26,7 @@ const app = express();
 // 🔴 CHANGED: Proper CORS config (VERY IMPORTANT)
 app.use(
     cors({
-        origin: ['http://localhost:3000', 'http://localhost:3001'], // 🟢 ADDED
+        origin: ['https://gautamzerodhafrontend.onrender.com', 'https://gautamzerodhadashboard.onrender.com'], // 🟢 ADDED
         credentials: true
     })
 );
