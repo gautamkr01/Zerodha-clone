@@ -1,6 +1,16 @@
 services:
-    - type: static
-      name: zerodha-frontend
+    - type: web
+      name: gautamzerodhabackend
+      runtime: node
+      rootDir: backend
+      buildCommand: npm install
+      startCommand: npm start
+      envVars:
+          - key: NODE_ENV
+            value: production
+
+    - type: static_site
+      name: gautamzerodhafrontend
       rootDir: frontend
       buildCommand: npm install && npm run build
       staticPublishPath: build
@@ -9,8 +19,8 @@ services:
             source: /*
             destination: /index.html
 
-    - type: static
-      name: zerodha-dashboard
+    - type: static_site
+      name: gautamzerodhadashboard
       rootDir: dashboard
       buildCommand: npm install && npm run build
       staticPublishPath: build
