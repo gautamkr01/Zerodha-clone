@@ -27,15 +27,12 @@ const Login = () => {
             const res = await axios.post(
                 'https://gautamzerodhabackend.onrender.com/login',
                 formData,
-                { withCredentials: true } // 🔥 REQUIRED
+                { withCredentials: true }
             );
 
-            // ✅ ONLY CHECK success
             if (res.data.success) {
                 console.log('Login successful, cookie set');
-
-                // 🔥 REDIRECT TO DASHBOARD
-                window.location.href = 'http://localhost:3000';
+                window.location.href = 'https://gautamzerodhadashboard.onrender.com';
             } else {
                 setError('Login failed');
             }

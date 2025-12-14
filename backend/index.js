@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 
 const authRoute = require('./Routes/AuthRoute');
 
-// 🟢 ADDED: auth middleware
 const { userVerification } = require('./Middlewares/AuthMiddleware');
 
 const { HoldingsModel } = require('./model/HoldingsModel');
@@ -19,42 +18,28 @@ const url = process.env.MONGO_URL;
 
 const app = express();
 
-// =======================
-// 🟢 MIDDLEWARES
-// =======================
-
-// 🔴 CHANGED: Proper CORS config (VERY IMPORTANT)
 app.use(
     cors({
-        origin: ['https://gautamzerodhafrontend.onrender.com', 'https://gautamzerodhadashboard.onrender.com'], // 🟢 ADDED
+        origin: ['https://gautamzerodhafrontend.onrender.com', 'https://gautamzerodhadashboard.onrender.com'], 
         credentials: true
     })
 );
 
 app.use(cookieParser());
-app.use(express.json()); // 🔴 bodyParser not needed anymore
+app.use(express.json()); 
 
-// =======================
-// 🟢 AUTH ROUTES
-// =======================
 app.use('/', authRoute);
 
-// =======================
-// 🟢 DATABASE CONNECTION
-// =======================
+
 mongoose
     .connect(url)
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => {
         console.error('MongoDB connection error:', err);
-        process.exit(1); // 🔴 CHANGED: fail fast
+        process.exit(1); 
     });
 
-// =======================
-// 🟢 PROTECTED API ROUTES
-// =======================
 
-// 🔴 CHANGED: Protect holdings
 app.get('/allHoldings', userVerification, async (req, res) => {
     try {
         const allHoldings = await HoldingsModel.find({});
@@ -67,7 +52,7 @@ app.get('/allHoldings', userVerification, async (req, res) => {
     }
 });
 
-// 🔴 CHANGED: Protect positions
+//  CHANGED: Protect positions
 app.get('/allPositions', userVerification, async (req, res) => {
     try {
         const allPositions = await PositionsModel.find({});
@@ -80,7 +65,7 @@ app.get('/allPositions', userVerification, async (req, res) => {
     }
 });
 
-// 🔴 CHANGED: Protect orders
+//  CHANGED: Protect orders
 app.get('/allOrders', userVerification, async (req, res) => {
     try {
         const allOrders = await OrdersModel.find({});
@@ -93,7 +78,7 @@ app.get('/allOrders', userVerification, async (req, res) => {
     }
 });
 
-// 🔴 CHANGED: Protect new order creation
+//  CHANGED: Protect new order creation
 app.post('/newOrder', userVerification, async (req, res) => {
     try {
         const { name, qty, price, mode } = req.body;
@@ -129,7 +114,7 @@ app.post('/newOrder', userVerification, async (req, res) => {
 app.post('/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        sameSite: 'lax'
+        sameSite: 'none'
     });
 
     res.status(200).json({

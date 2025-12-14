@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children }) => {
 
     useEffect(() => {
         axios
-            .get(process.env.BACKEND_API_URL, { withCredentials: true })
+            .get('https://gautamzerodhabackend.onrender.com/verify', { withCredentials: true })
             .then(() => {
                 setAuthorized(true);
             })

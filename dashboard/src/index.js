@@ -7,7 +7,6 @@ import ProtectedRoute from './routes/ProtectedRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    // 🔴 REMOVED React.StrictMode
     <BrowserRouter>
         <Routes>
             <Route

@@ -2,14 +2,13 @@ const { UsersModel } = require('../model/UsersModel');
 const { createSecretToken } = require('../util/SecretToken');
 const bcrypt = require('bcryptjs');
 
-// =======================
-// 🟢 SIGNUP CONTROLLER
-// =======================
+//  SIGNUP CONTROLLER
+
 module.exports.signup = async (req, res) => {
     try {
         const { email, password, username } = req.body;
 
-        // 🟢 VALIDATION
+        // VALIDATION
         if (!email || !password || !username) {
             return res.status(400).json({
                 success: false,
@@ -17,7 +16,7 @@ module.exports.signup = async (req, res) => {
             });
         }
 
-        // 🟢 CHECK EXISTING USER
+        // CHECK EXISTING USER
         const existingUser = await UsersModel.findOne({ email });
         if (existingUser) {
             return res.status(409).json({
@@ -26,24 +25,24 @@ module.exports.signup = async (req, res) => {
             });
         }
 
-        // 🟢 CREATE USER
+        // CREATE USER
         const user = await UsersModel.create({
             email,
             password,
             username
         });
 
-        // 🟢 GENERATE TOKEN
+        //  GENERATE TOKEN
         const token = createSecretToken(user._id);
 
-        // 🔥 SET COOKIE (THIS IS THE AUTH NOW)
+        // SET COOKIE (THIS IS THE AUTH NOW)
         res.cookie('token', token, {
             httpOnly: true,
-            sameSite: 'none', // ✅ works across ports
-            secure: false // ✅ set true only in HTTPS
+            sameSite: 'none',
+            secure: true
         });
 
-        // 🔴 CHANGED: DO NOT SEND TOKEN IN RESPONSE
+        // CHANGED: DO NOT SEND TOKEN IN RESPONSE
         return res.status(201).json({
             success: true,
             message: 'User signed up successfully',
@@ -63,14 +62,14 @@ module.exports.signup = async (req, res) => {
     }
 };
 
-// =======================
-// 🟢 LOGIN CONTROLLER
-// =======================
+
+//  LOGIN CONTROLLER
+
 module.exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // 🟢 VALIDATION
+        //  VALIDATION
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -78,7 +77,7 @@ module.exports.login = async (req, res) => {
             });
         }
 
-        // 🟢 FIND USER
+        //  FIND USER
         const user = await UsersModel.findOne({ email });
         if (!user) {
             return res.status(401).json({
@@ -87,7 +86,7 @@ module.exports.login = async (req, res) => {
             });
         }
 
-        // 🟢 COMPARE PASSWORD
+        //  COMPARE PASSWORD
         const auth = await bcrypt.compare(password, user.password);
         if (!auth) {
             return res.status(401).json({
@@ -96,10 +95,10 @@ module.exports.login = async (req, res) => {
             });
         }
 
-        // 🟢 GENERATE TOKEN
+        // GENERATE TOKEN
         const token = createSecretToken(user._id);
 
-        // 🔥 SET COOKIE (AUTH SOURCE)
+        // SET COOKIE (AUTH SOURCE)
         // res.cookie('token', token, {
         //     httpOnly: true,
         //     sameSite: 'lax',
@@ -111,7 +110,7 @@ module.exports.login = async (req, res) => {
             secure: true // REQUIRED for HTTPS
         });
 
-        // 🔴 CHANGED: NO TOKEN IN JSON
+        //  CHANGED: NO TOKEN IN JSON
         return res.status(200).json({
             success: true,
             message: 'User logged in successfully',
