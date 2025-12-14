@@ -9,7 +9,7 @@ services:
           - key: NODE_ENV
             value: production
 
-    - type: static_site
+    - type: static
       name: gautamzerodhafrontend
       rootDir: frontend
       buildCommand: npm install && npm run build
@@ -19,7 +19,7 @@ services:
             source: /*
             destination: /index.html
 
-    - type: static_site
+    - type: static
       name: gautamzerodhadashboard
       rootDir: dashboard
       buildCommand: npm install && npm run build
