@@ -18,37 +18,33 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
-  setLoading(true);
+    const handleSubmit = async e => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
 
-  try {
-    const res = await axios.post(
-      'http://localhost:8080/login',
-      formData,
-      { withCredentials: true } // 🔥 REQUIRED
-    );
+        try {
+            const res = await axios.post(
+                'https://gautamzerodhabackend.onrender.com/login',
+                formData,
+                { withCredentials: true } // 🔥 REQUIRED
+            );
 
-    // ✅ ONLY CHECK success
-    if (res.data.success) {
-      console.log("Login successful, cookie set");
+            // ✅ ONLY CHECK success
+            if (res.data.success) {
+                console.log('Login successful, cookie set');
 
-      // 🔥 REDIRECT TO DASHBOARD
-      window.location.href = 'http://localhost:3000';
-    } else {
-      setError("Login failed");
-    }
-
-  } catch (err) {
-    setError(
-      err.response?.data?.message || "Server error"
-    );
-  } finally {
-    setLoading(false);
-  }
-};
-
+                // 🔥 REDIRECT TO DASHBOARD
+                window.location.href = 'http://localhost:3000';
+            } else {
+                setError('Login failed');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Server error');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="login-container">

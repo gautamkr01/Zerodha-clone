@@ -26,7 +26,7 @@ const Signup = () => {
 
         try {
             const res = await axios.post(
-                'http://localhost:8080/signup',
+                'https://gautamzerodhabackend.onrender.com/signup',
                 formData,
                 { withCredentials: true } // 🔥 REQUIRED FOR COOKIE
             );
